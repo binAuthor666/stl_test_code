@@ -1,9 +1,10 @@
 /*
  * @Author: 计佳斌bin
  * @Date: 2023-05-25 15:18:27
- * @LastEditTime: 2023-05-25 15:46:32
- * @FilePath: \mycpp_code\linux_server\default_alloc_template_part.cpp
+ * @LastEditTime: 2023-05-25 15:54:52
+ * @FilePath: \mycpp_code\stl_test_code\chapter2\default_alloc_template_part.cpp
  */
+
 enum{__ALLIGN=8};//小型区块的上调边界
 enum{__MAX_BYTES=128};//小型区块的上限
 enum{__NFREELISTS=__MAX_BYTES/__ALLIGN};//free-lists个数
