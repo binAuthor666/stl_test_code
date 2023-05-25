@@ -1,7 +1,7 @@
 /*
  * @Author: 计佳斌bin
  * @Date: 2023-05-25 15:18:27
- * @LastEditTime: 2023-05-25 15:54:52
+ * @LastEditTime: 2023-05-25 16:12:29
  * @FilePath: \mycpp_code\stl_test_code\chapter2\default_alloc_template_part.cpp
  */
 
@@ -45,8 +45,42 @@ private:
     static char* heap_size;
 
 public:
-    static void* allocate(size_t n) {}
-    static void* deallocate(void* p,size_t n){}
+    //n must be > 0
+    static void* allocate(size_t n) {
+        obj* volatile* my_free_list;
+        obj* result;
+        //大于128就调用第一级配置器
+        if(n>(size_t)__MAX_BYTES){
+            return (malloc_alloc::allocate(n));
+        }
+        //寻找16个free lists中适当的一个
+        my_free_list=free_list+FREELIST_INDEX(n);
+        result=*my_free_list;
+        if(result==0){
+            //没找到可用的free list,准备重新填充free list
+            void* r=refill(ROUND_UP(n));
+            return r;
+        }
+        //调整free list
+        *my_free_list=result->free_list_link;
+        return (result);
+    }
+    //p不可以是0
+    static void* deallocate(void* p,size_t n){
+        obj* q=(obj*)p;
+        obj* volatile* my_free_list;
+
+        //大于128就调用第一级配置器
+        if(n>(size_t)__MAX_BYTES){
+            malloc_alloc::deallocate(p,n);
+            return;
+        }
+        //寻找对应的free list
+        my_free_list = free_list+FREELIST_INDEX(n);
+        //调整free list，回收区块
+        q->free_list_link=*my_free_list;
+        *my_free_list=q;
+    }
     static void* reallocate(void* p,size_t old_sz,size_t new_sz);
 };
 
