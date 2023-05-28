@@ -1,7 +1,7 @@
 /*
  * @Author: 计佳斌bin
  * @Date: 2023-05-26 15:05:54
- * @LastEditTime: 2023-05-26 15:29:49
+ * @LastEditTime: 2023-05-26 17:15:12
  * @FilePath: \mycpp_code\stl_test_code\chapter2\malloc_alloc_template.cpp
  */
 #if 0
@@ -81,7 +81,7 @@ void* __malloc_alloc_template<inst>::oom_reallock(void* p,size_tk n)
         if(0==my_malloc_handler){__THROW_BAD_ALLOC;}
         (*my_malloc_handler)();//调用处理例程，企图释放内存
         result=realloc(p,n);//再次尝试配置内存
-        if(result) return(result);
+        if(result) return(resulkt);
     }
 }
 
